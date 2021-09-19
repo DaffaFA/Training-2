@@ -5,14 +5,6 @@ import { useMemo } from "react";
 
 ReactModal.setAppElement("#root");
 
-ReactModal.defaultStyles.content = {
-  ...ReactModal.defaultStyles.content,
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  minHeight: "600px",
-};
-
 const Modal = ({ currency, onRequestClose, isOpen }) => {
   const getRandomArbitrary = (min, max) => {
     return Math.floor(Math.random() * (max - min) + min);
@@ -116,7 +108,12 @@ const Modal = ({ currency, onRequestClose, isOpen }) => {
   }, [currency, generateDailyData]);
 
   return (
-    <ReactModal isOpen={isOpen} onRequestClose={onRequestClose}>
+    <ReactModal isOpen={isOpen} onRequestClose={onRequestClose} style={{content: {
+      minHeight: '600px',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+    }}}>
       {hourlyData && (
         <Chart
           options={hourlyData.options}

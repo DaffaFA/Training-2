@@ -3,6 +3,7 @@ import { gql, useMutation } from "@apollo/client";
 import nProgress from "nprogress";
 import { appContext } from "../context";
 import Modal from "./Modal";
+import DeleteModal from "./DeleteModal";
 
 const ADD_CURRENCY = gql`
   mutation createCurrency($currency: CurrencyInput!) {
@@ -33,6 +34,7 @@ const Table = () => {
   const { currencies, setCurrencies } = useContext(appContext);
   const [selected, setSelected] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
 
   const selectRow = (id) => {
     if (selected === id) {
@@ -42,8 +44,7 @@ const Table = () => {
     }
   };
 
-  const deleteSelected = async (element) => {
-    element.preventDefault();
+  const deleteSelected = async () => {
     if (!selected) return;
 
     try {
@@ -55,7 +56,14 @@ const Table = () => {
 
     nProgress.done();
     setSelected(null);
+    setDeleteModal(false);
   };
+
+  const deleteHandler = (element) => {
+    element.preventDefault();
+    if (!selected) return;
+    setDeleteModal(true);
+  }
 
   const addCurrency = async (element) => {
     element.preventDefault();
@@ -97,6 +105,7 @@ const Table = () => {
   return (
     <>
     <Modal isOpen={showModal} onRequestClose={() => setShowModal(false)} currency={modalData} />
+    <DeleteModal isOpen={deleteModal} onRequestClose={() => setDeleteModal(false)} setOpen={setDeleteModal} deleteHandler={deleteSelected} />
     <div className="flex flex-col">
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="py-2 align-middle inline-block sm:px-6 lg:px-8 min-w-[600px] max-h-[400px]">
@@ -167,7 +176,7 @@ const Table = () => {
                         <a
                           href="#"
                           className="bg-blue-500 py-1 px-6 text-white rounded-3xl"
-                          onClick={(e) => deleteSelected(e)}
+                          onClick={(e) => deleteHandler(e)}
                         >
                           Delete
                         </a>
