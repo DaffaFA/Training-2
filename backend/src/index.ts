@@ -15,7 +15,7 @@ const main = async () => {
 
   const app = express();
 
-  app.use(cors({ origin: "http://localhost:3000" }));
+  // app.use(cors({ origin: "http://localhost:3000" }));
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
@@ -31,7 +31,9 @@ const main = async () => {
 
   apolloServer.applyMiddleware({
     app: app,
-    cors: false,
+    cors: {
+      origin: 'http://localhost:5000'
+    },
   });
 
   app.listen(8000, () => console.log("Server listening on port 8000"));
